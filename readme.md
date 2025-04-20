@@ -1,4 +1,4 @@
-# Projet Ansible : Déploiement de Tomcat
+# Projet Ansible : Déploiement de Tomcat et d'une application
 
 Ce projet vise à automatiser le déploiement et la configuration d'un serveur Tomcat à l'aide d'Ansible. Il inclut la gestion des variables, l'utilisation de templates, l'installation depuis la source, et le déploiement d'une application.
 
