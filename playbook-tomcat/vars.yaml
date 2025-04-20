@@ -1,0 +1,1 @@
+java_package: "{{ 'openjdk-11-jdk' if ansible_os_family == 'Debian' else 'java-11-openjdk' }}"

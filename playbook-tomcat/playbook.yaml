@@ -1,0 +1,36 @@
+---
+- name: Ansible playbook to set up Tomcat in debian 12
+  hosts: debian.cible1
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: test de connexion
+      ping:
+    
+    - name: installation de java sur les cible Debian et centos
+      apt:
+        name: openjdk-11-jdk
+        state: present
+        update_cache: yes 
+      # when: ansible_os_family == "Debian"
+      tags: isntallation,java,debian
+    
+    - name: création d'un utilisateur system tomcat 
+      user:
+        name: tomcat 
+        home: /opt/tomcat
+        state: present 
+        
+
+
+    
+    - name: installation de tomcat  via la source 
+    
+    - name: création du user admin et gestionnaire de tomcat
+    
+    - name: Activationde l'accès à distance de tomcat 
+    
+    - name: déployer une apllication sur le server 
+    
+    - name: Modification des paramètres de la JVM 
