@@ -1,36 +1,114 @@
 ---
 - name: Ansible playbook to set up Tomcat in debian 12
   hosts: debian.cible1
+  become: true
   vars_files:
     - vars.yaml
 
   tasks:
     - name: test de connexion
       ping:
-    
+      
     - name: installation de java sur les cible Debian et centos
       apt:
-        name: openjdk-11-jdk
+        name: openjdk-17-jdk
         state: present
         update_cache: yes 
-      # when: ansible_os_family == "Debian"
+      when: ansible_os_family == "Debian"
       tags: isntallation,java,debian
     
-    - name: création d'un utilisateur system tomcat 
+    - name: création d'un group tomcat
+      group: 
+        name: user1
+      tags: user
+    
+    - name: création d'un utilisateur tomcat 
       user:
-        name: tomcat 
-        home: /opt/tomcat
-        state: present 
-        
+        name: user1 
+        home: /opt/user1
+        create_home: yes 
+        shell: /bin/false
+        group: user1
+      tags: create,user
+
+    - name: Télécharger l'archive Tomcat
+      get_url:
+        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.104/bin/apache-tomcat-9.0.104.tar.gz"
+        dest: "/tmp/"
+        mode: '0644'
+      tags: decompresse
+      
+    - name: Décompresser le zip de Tomcat
+      unarchive:
+        src: "/tmp/apache-tomcat-9.0.104.tar.gz"
+        dest: "/opt/user1"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+      tags: decompresse,dec
+    
+    - name: Changer le propriétaire des fichiers Tomcat
+      file:
+        path: /opt/user1
+        state: directory
+        recurse: yes
+        owner: user1
+        group: user1
+      tags: owner
+
+    - name: Rendre exécutables les scripts du dossier bin
+      file:
+        path: "{{ item }}"
+        mode: '0755'
+      with_fileglob:
+        - "/opt/user1/bin/startup.sh"
+        - "/opt/user1/bin/shutdown.sh"
+      when: item is file
+    
+    - name: Activation de l'accès à distance à la console de management 
+      template: 
+        src: "{{ item }}-context.xml.j2"
+        dest: /opt/user1/webapps/{{ item }}/META-INF/context.xml
+      loop:
+        - manager 
+        - host-manager
+      tags: 
+        - remote
+        - access
+
+    - name: creation d'un fichier systemd 
+      template:
+        src: tomcat.service.j2
+        dest: /etc/systemd/system/tomcat1.service
+      tags: service, systemd
+
+    - name: Recharger le systemd
+      systemd:
+        daemon_reload: yes 
+      tags: 
+        - systemd
+        - reload
+        - tomcat 
+    
+    - name: Démarer le service tomcat
+      systemd:
+        name: tomcat1
+        state: started
+      tags: 
+        - systemd
+        - start 
+        - tomcat 
+    
+    - name: Activer le service Tomcat au démarrage
+      systemd:
+        name: tomcat1.service
+        enabled: yes 
+      tags: 
+        - systemd
+        - enabled
+        - tomcat 
+
+ 
 
 
     
-    - name: installation de tomcat  via la source 
-    
-    - name: création du user admin et gestionnaire de tomcat
-    
-    - name: Activationde l'accès à distance de tomcat 
-    
-    - name: déployer une apllication sur le server 
-    
-    - name: Modification des paramètres de la JVM 
+  
