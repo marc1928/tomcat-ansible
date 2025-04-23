@@ -41,9 +41,6 @@ Ce projet vise à automatiser le déploiement et la configuration d'un serveur T
 
 ## Auteur
 
-Ce projet a été conçu pour automatiser et simplifier le déploiement de Tomcat en production.
-
-
   - name: installation de tomcat  via la source 
     
     - name: création du user admin et gestionnaire de tomcat
