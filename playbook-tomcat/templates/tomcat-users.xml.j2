@@ -1,0 +1,36 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+<!--
+ 
+  Built-in Tomcat manager roles:
+    - manager-gui    - allows access to the HTML GUI and the status pages.
+    - manager-script - allows access to the HTTP API and the status pages.
+    - manager-jmx    - allows access to the JMX proxy and the status pages.
+    - manager-status - allows access to the status pages only.
+    - manager-advanced - allows access to advanced management features.
+    - admin-gui - allows access to the HTML GUI and the status pages.
+    - admin-script - allows access to the HTTP API and the status pages.
+    - admin-jmx - allows access to the JMX proxy and the status pages.
+    - admin-status - allows access to the status pages only. 
+    - admin - allows access to the admin pages only.
+    - manager - allows access to the manager pages only.
+--> 
+<!--
+  <user username="admin" password="<must-be-changed>" roles="manager-gui"/>
+  <user username="robot" password="<must-be-changed>" roles="manager-script"/>
+-->
+
+  {% for role in tomcat_roles %}
+  <role rolename="{{ role }}"/>
+  {% endfor %}
+
+  {% for user in tomcat_users %}
+  <user username="{{ user.username }}" password="{{ user.password }}" roles="{{ user.roles | join(',') }}"/>
+  {% endfor %}
+
+</tomcat-users>

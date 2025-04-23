@@ -1,0 +1,65 @@
+# java package for Debian
+java_package_debian: openjdk-17-jdk
+
+# User dédié pour le service Tomcat
+tomcat_group: user1
+tomcat_user: user1
+tomcat_home: /opt/user1
+tomcat_shell: /bin/false
+
+# Tomcat package
+tomcat_version: 9.0.104
+tomcat_archive: "apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/{{ tomcat_archive }}"
+tomcat_extract_path: "{{ tomcat_home }}"
+tomcat_bin_scripts:
+  - "{{ tomcat_home }}/bin/startup.sh"
+  - "{{ tomcat_home }}/bin/shutdown.sh"
+
+# Tomcat service
+java_home: "/usr/lib/jvm/java-17-openjdk-amd64"
+tomcat_service_name: tomcat1
+tomcat_service_file: "/etc/systemd/system/{{ tomcat_service_name }}.service"
+
+# application .war file 
+war_file_src: webapp.war
+war_file_dest: "{{ tomcat_home }}/webapps/{{ war_file_src }}"
+
+# Tomcat-users.xml 
+tomcat_roles:
+  - manager-gui
+  - admin
+  - admin-gui
+
+tomcat_users:
+  - username: "tomcat"
+    password: "tomcat"
+    roles:
+      - manager-gui
+      - admin
+      - admin-gui
+
+# server.xml
+tomcat_server_port: 8005
+tomcat_shutdown_command: "SHUTDOWN" 
+
+tomcat_http_port: 8080
+tomcat_connection_timeout: 20000
+tomcat_redirect_port: 8443
+tomcat_max_parameter_count: 1000
+
+tomcat_default_host: "localhost"
+tomcat_app_base: "webapps"
+tomcat_unpack_wars: true
+tomcat_auto_deploy: true
+
+tomcat_log_directory: "logs"
+tomcat_log_prefix: "localhost_access_log"
+tomcat_log_suffix: ".txt"
+tomcat_log_pattern: "%h %l %u %t &quot;%r&quot; %s %b"
+
+# setenv.sh - jvm options
+tomcat_jvm_xms: 225m
+tomcat_jvm_xmx: 256m
+
+
