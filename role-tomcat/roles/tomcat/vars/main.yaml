@@ -1,9 +1,10 @@
+--- 
 # java package for Debian
 java_package_debian: openjdk-17-jdk
 
 # User dédié pour le service Tomcat
-tomcat_group: tomcat
-tomcat_user: tomcat
+tomcat_group: marctmt
+tomcat_user: marctmt
 tomcat_home: /opt/{{ tomcat_user }}
 tomcat_shell: /bin/false
 
@@ -22,7 +23,7 @@ tomcat_service_name: tomcat
 tomcat_service_file: "/etc/systemd/system/{{ tomcat_service_name }}.service"
 
 # application .war file 
-war_file_src: webapp.war
+war_file_src: sample-marc.war
 war_file_dest: "{{ tomcat_home }}/webapps/{{ war_file_src }}"
 
 # Tomcat-users.xml 
@@ -43,7 +44,7 @@ tomcat_users:
 tomcat_server_port: 8006
 tomcat_shutdown_command: "SHUTDOWN" 
 
-tomcat_http_port: 8082
+tomcat_http_port: 8085
 tomcat_connection_timeout: 20000
 tomcat_redirect_port: 8443
 tomcat_max_parameter_count: 1000
@@ -59,7 +60,7 @@ tomcat_log_suffix: ".txt"
 tomcat_log_pattern: "%h %l %u %t &quot;%r&quot; %s %b"
 
 # setenv.sh - jvm options
-tomcat_jvm_xms: 225m
+tomcat_jvm_xms: 125m
 tomcat_jvm_xmx: 256m
 
 

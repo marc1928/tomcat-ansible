@@ -1,0 +1,8 @@
+all:
+  children:
+    tomcat:
+      hosts:
+        debian.cible1:
+        centos.cible2:
+    
+  

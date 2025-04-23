@@ -12,12 +12,12 @@
         state: present
         update_cache: yes
       when: ansible_os_family == "Debian"
-      tags: [installation, java, debian]
+      tags: installation, java, debian
 
     - name: Création du groupe Tomcat
       group:
         name: "{{ tomcat_group }}"
-      tags: [user]
+      tags: user
 
     - name: Création de l'utilisateur Tomcat
       user:
@@ -26,14 +26,14 @@
         create_home: yes
         shell: "{{ tomcat_shell }}"
         group: "{{ tomcat_group }}"
-      tags: [create, user]
+      tags: create, user
 
     - name: Télécharger l'archive Tomcat
       get_url:
         url: "{{ tomcat_url }}"
         dest: "/tmp/"
         mode: '0644'
-      tags: [download, tomcat]
+      tags: download, tomcat
 
     - name: Décompresser l'archive Tomcat
       unarchive:
@@ -41,7 +41,7 @@
         dest: "{{ tomcat_extract_path }}"
         remote_src: yes
         extra_opts: [--strip-components=1]
-      tags: [decompresse, tomcat]
+      tags: decompresse, tomcat
 
     - name: Changer le propriétaire de Tomcat
       file:
@@ -50,14 +50,14 @@
         recurse: yes
         owner: "{{ tomcat_user }}"
         group: "{{ tomcat_group }}"
-      tags: [permissions]
+      tags: permissions
 
     - name: Rendre exécutables les scripts du dossier bin
       file:
         path: "{{ item }}"
         mode: '0755'
       loop: "{{ tomcat_bin_scripts }}"
-      tags: [bin, executable]
+      tags: bin, executable
 
     - name: Activation de l'accès à distance à la console manager
       template:
@@ -66,48 +66,48 @@
       loop:
         - manager
         - host-manager
-      tags: [remote, access]
+      tags: remote, access
 
     - name: Création du fichier systemd
       template:
         src: templates/tomcat.service.j2
         dest: "{{ tomcat_service_file }}"
-      tags: [systemd, service]
+      tags: systemd, service
 
     - name: Recharger les fichiers systemd
       systemd:
         daemon_reload: yes
-      tags: [systemd, reload]
-
+      tags: systemd, reload
+      
     - name: Démarrer le service Tomcat
       systemd:
         name: "{{ tomcat_service_name }}"
         state: restarted
-      tags: [systemd, restart]
+      tags: systemd, restart
 
     - name: Activer Tomcat au démarrage
       systemd:
         name: "{{ tomcat_service_name }}"
         enabled: yes
-      tags: [systemd, enable]
+      tags: systemd, enable
 
     - name: Création du fichier tomcat-users.xml
       template:
         src: templates/tomcat-users.xml.j2
         dest: "{{ tomcat_home }}/conf/tomcat-users.xml"
-      tags: [config, tomcat-users]
+      tags: config, tomcat-users
 
     - name: Configuration de server.xml
       template:
         src: templates/server.xml.j2
         dest: "{{ tomcat_home }}/conf/server.xml"
-      tags: [config, server]
+      tags: config, server
 
     - name: Supprimer l'ancien WAR s'il existe
       file:
         path: "{{ war_file_dest }}"
         state: absent
-      tags: [deploy, clean]
+      tags: deploy, clean
 
     - name: déployer l'application
       copy:
@@ -116,7 +116,7 @@
         owner: "{{ tomcat_user }}"
         group: "{{ tomcat_group }}"
         mode: '0644'
-      tags: [deploy, war]
+      tags: deploy, war
     
     - name: Définir les options JVM dans setenv.sh
       template:
@@ -126,7 +126,7 @@
         owner: "{{ tomcat_user }}"
         group: "{{ tomcat_group }}"
       notify: restart tomcat completely
-      tags: [tomcat-jvm, setenv]
+      tags: tomcat-jvm, setenv
 
 
   handlers:

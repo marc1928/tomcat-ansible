@@ -1,0 +1,10 @@
+--- 
+- name: Mise en place de tomcat et déploiement d'une application 
+  become: yes 
+  hosts: debian.cible1
+
+  roles: 
+    - tomcat
+  
+
+
